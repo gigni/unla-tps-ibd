@@ -1,0 +1,131 @@
+/************************************************************/
+/****Poner primero cualquier valor sin FK********************/
+/************************************************************/
+
+Combi: patente, modelo, marca, km_service
+
+("AFJ579","Kombi T2","Volkswagen",100)
+("OP654UHG","Expert Tepee","Peugeot", 300)
+("KJ579GHI","Trafic","Peugeot", 200)
+("LK467HYG","Trafic","Peugeot", 200)
+
+Mantenimiento: id_mantenimiento, fecha_mantenimiento, descripcion, odometro, monto_service, mantenimiento_id_taller, mantenimiento_combi_patente
+
+(1,'2018-06-13',"No importante",133,2000,1,"AFJ579")
+(2,'2018-06-17',"",206,3100,1,"KJ579GHI")
+(3,'2018-06-24',"Sigue sin importar",346,3000,2,"LK467HYG")
+(4,'2018-06-28',"No importante",216,1005,2,"KJ579GHI")
+(5,'2018-07-02',"",3556,2100,1,"KJ579GHI")
+(6,'2018-07-07',"",6547,4620,2,"LK467HYG")
+(7,'2018-07-11',"",3244,1640,2,"KJ579GHI")
+(8,'2018-07-17',"No importa",4672,1260,1,"OP654UHG")
+(9,'2018-07-24',"",4675,1260,1,"AFJ579")
+(10,'2018-07-30',"No va a importar nunca",1235,3210,1,"KJ579GHI")
+
+Taller: id_taller, razon_social, cuit, taller_id_domicilio
+
+(1,"TecnoCar",24234569721,13)
+(2,"Enchulame La Combi",24674982631,11)
+
+Chofer: dni, cuil, apellido, nombre, fecha_ingreso, n_licencia, chofer_id_domicilio
+
+(34668513,20346685138,"Dominguez","Juan",'2012-06-20',32157641,1)
+(38164236,20381642361,"Niiya","Germán",'2010-04-30',32414894,2)
+(36264876,20362648761,"Medina","Walter",'2016-12-06',24164876,5)
+(37498726,20374987267,"Noy","Martin",'2011-04-24',22679546,6)
+
+Estacion de servicio: id_estacion, razon_social, cuit, servicio_id_domicilio
+
+(1,"Shell",32214795641,9)
+(2,"YPF",2349678762,14)
+
+Combustible: id_carga, fecha_carga, litros_cargados, monto_carga, combustible_combi_patente, combustible_id_estacion, combustible_chofer_dni (A fin de calcular las cargas, debe estimarse un consumo urbano promedio de 10 lts/km, con una variación de +/- 5% por recorrido)
+
+(1,'2018-06-02',999,9999,"OP654UHG",1,34668513)
+(2,'2018-06-05',999,9999,"AFJ579",2,38164236)
+(3,'2018-06-11',999,9999,"LK467HYG",1,37498726)
+(4,'2018-06-17',999,9999,"KJ579GHI",2,36264876)
+(5,'2018-06-30',999,9999,"AFJ579",2,38164236)
+(6,'2018-07-01',999,9999,"LK467HYG",1,37498726)
+(7,'2018-07-09',999,9999,"OP654UHG",1,36264876)
+(8,'2018-07-14',999,9999,"KJ579GHI",2,38164236)
+(9,'2018-07-20',999,9999,"AFJ579",2,34668513)
+(10,'2018-07-27',999,9999,"KJ579GHI",1,37498726)
+
+Domicilio: id_domicilio, calle, num_calle, domicilio_id_localidad
+
+(1,"Salta",1264,1) -
+(2,"Cangallo",954,2) -
+(3,"Monteagudo",125,4)
+(4,"Beruti",1254,5)
+(5,"La Carra",647,5)-
+(6,"Guemes",2456,5) -
+(7,"Manuel Quintana",786,6)
+(8,"Oroño",465,3)
+(9,"Juan B. Justo", 2300,1) -
+(10,"Pichincha",2164,2) 
+(11,"9 de Julio",945,1) -
+(12,"Ituzaingó",2067,1)
+(13,"Helguera",1641,2) -
+(14,"Padilla",697,2) -
+(15,"Campichuelo",496,5) 
+(16,"29 de Septiembre",3102,1) 
+(17,"Almeira",2164,6) 
+(18,"Las Piedras",648,1) 
+
+Localidad: id_localidad, nombre_localidad, localidad_id_provincia
+
+(1,"Lanús",1)
+(2,"Gerli",1)
+(3,"Alberdi",2)
+(4,"Colón",3)
+(5,"Avellaneda",1)
+(6,"Burzaco",1)
+(7,"Constitución",1)
+(8,"Correo Central",1)
+(9,"Agronomía",1)
+
+Provincia: id_provincia, nombre_ provincia
+
+(1,"Buenos Aires")
+(2,"Santa Fe")
+(3,"Corrientes")
+
+Salida: id_salida, km_salida, fecha, pasajes_vendidos ,km_llegada, novedades, salida_id_recorrido, salida_combi_patente, salida_chofer_dni
+
+(1,999,'2018-06-03',6,999,"Ninguna",1,"KJ579GHI",38164236)
+(2,999,'2018-06-08',1,999,"Ninguna",3,"OP654UHG",34668513)
+(3,999,'2018-06-14',5,999,"Ninguna",2,"AFJ579",37498726)
+(4,999,'2018-06-25',4,999,"Ninguna",1,"LK467HYG",34668513)
+(5,999,'2018-06-30',6,999,"Ninguna",1,"OP654UHG",38164236)
+(6,999,'2018-07-02',7,999,"Ninguna",2,"KJ579GHI",37498726)
+(7,999,'2018-07-12',8,999,"Ninguna",2,"LK467HYG",36264876)
+(8,999,'2018-07-15',4,999,"Ninguna",3,"AFJ579",34668513)
+(9,999,'2018-07-20',5,999,"Ninguna",3,"KJ579GHI",38164236)
+(10,999,'2018-07-24',2,999,"Ninguna",2,"OP654UHG",36264876)
+
+Parada: id_parada, calle_x, calle_y, parada_id_localidad
+
+(1,"Av Yrigoyen","Quintana",1)
+(2,"Av Eva Peron","Anatole France",1)
+(3,"Bustamante","Padilla",2)
+(4,"Larralde","Guemes",5)
+(5,"Av Belgrano","Anatole France",5)
+(6,"Av Belgrano","Acosta",5)
+(7,"Humberto 1ro","Carlos Calvo",7)
+(8,"Av San Martin","Condarco",9)
+(9,"Leandro N. Alem","Av Corrientes",8)
+(10,"Av Brasil","Gral Hornos",7)
+---
+Agregar hasta 24
+
+Recorrido: id_recorrido, nombre_recorrido, distancia_recorrer, ¿¿¿recorrido_paradas???
+
+(1,"Lanús-Constitución", 10, ???)
+(2,"Lanús-Correo Central",13, ???)
+(3,"Lanús-Agronomía",18, ???)
+
+Recorrido Individual: id_recorrido_ind, monto_individual,abordaje_id_parada,rec_ind_id_recorrido
+Cliente: dni, apellido, nombre , pasajero_id_tarifa, pasajero_id_recorrido_ind, pasajero_id_domicilio
+
+(34726452,"Rodriguez","Noelia", , ,
