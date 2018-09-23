@@ -82,8 +82,9 @@ Localidad: id_localidad, nombre_localidad, localidad_id_provincia
 (5,"Avellaneda",1)
 (6,"Burzaco",1)
 (7,"Constitución",1)
-(8,"Correo Central",1)
+(8,"Puerto Madero",1)
 (9,"Agronomía",1)
+(10,"Caballito",1)
 
 Provincia: id_provincia, nombre_ provincia
 
@@ -106,7 +107,7 @@ Salida: id_salida, km_salida, fecha, pasajes_vendidos ,km_llegada, novedades, sa
 
 Parada: id_parada, calle_x, calle_y, parada_id_localidad
 
-(1,"Av Yrigoyen","Quintana",1)
+(1,"Av Yrigoyen","Quintana",1)             -Repite en todas
 (2,"Av Eva Peron","Anatole France",1)
 (3,"Bustamante","Padilla",2)
 (4,"Larralde","Guemes",5)
@@ -115,17 +116,61 @@ Parada: id_parada, calle_x, calle_y, parada_id_localidad
 (7,"Humberto 1ro","Carlos Calvo",7)
 (8,"Av San Martin","Condarco",9)
 (9,"Leandro N. Alem","Av Corrientes",8)
-(10,"Av Brasil","Gral Hornos",7)
----
-Agregar hasta 24
+(10,"Av Brasil","Gral Hornos",7)          -Repite en todas
+(11,"Av Moreno","Av Alberdi", 10)
+(12,"Av Acoyte","Av Velez",10)
+(13,"Caxaraville","Reconquista",2)
 
-Recorrido: id_recorrido, nombre_recorrido, distancia_recorrer, ¿¿¿recorrido_paradas???
+(14,"Sitio de Montevideo","Córdoba",1)
+(15,"Maipú","Colón",5)
 
-(1,"Lanús-Constitución", 10, ???)
-(2,"Lanús-Correo Central",13, ???)
-(3,"Lanús-Agronomía",18, ???)
+(16,"Iguazú","Gral Roca",5)
+(17,"Burela","Salta",2)
+(18,"Arredondo","La Carra",2)
+(19,"San Martin","Italia",5)
+(20,"Cochabamba","Tacuarí",7)
+(21,"9 de Julio","Viamonte",8)            - repite en 2 y 3
+(22,"Hipolito Yrigoyen","Entre Rios",5)
+(23,"Juan de Garay","Bolivar",7)
+(24,"Pringles","Damonte",1)
+
+Recorrido: id_recorrido, nombre_recorrido, distancia_recorrer
+
+(1,"Lanús-Constitución", 10)
+(2,"Lanús-Correo Central",13)
+(3,"Lanús-Agronomía",18)
+
+Recorrido-paradas: id_recorrido, id_parada
+
+(1,1)
+(1,2)
+(1,3)
+(1,4)
+(1,5)
+(1,6)
+(1,7)
+(1,10)
+(2,1)
+(2,8)
+(2,9)
+(2,11)
+(2,12)
+(2,13)
+(2,10)
+(2,21)
+(3,1)
+(3,14)
+(3,15)
+(3,16)
+(3,17)
+(3,18)
+(3,10)
+(3,21)
 
 Recorrido Individual: id_recorrido_ind, monto_individual,abordaje_id_parada,rec_ind_id_recorrido
+
+(
+
 Cliente: dni, apellido, nombre , pasajero_id_tarifa, pasajero_id_recorrido_ind, pasajero_id_domicilio
 
 (34726452,"Rodriguez","Noelia", , ,

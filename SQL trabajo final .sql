@@ -30,8 +30,7 @@ salida_chofer_dni INT not null
 create table recorrido (
 id_recorrido INT primary key not null,
 nombre_recorrido VARCHAR(45),
-distancia_recorrer INT not null,
-recorrido_paradas INT
+distancia_recorrer INT not null
 );
 
 create table parada (
@@ -42,8 +41,8 @@ parada_id_localidad INT not null
 );
 
 /*Esta parte capaz hay que arreglarla*/
-create table recorrido_parada (
-recorrido_id_recorrido INT primary key not null,
+create table recorrido_paradas (
+recorrido_id_recorrido INT not null,
 parada_id_parada INT not null
 );
 /*******************************************/
@@ -177,8 +176,8 @@ alter table  recorrido_individual add foreign key (abordaje_id_parada) reference
 alter table  tarifa_plana add foreign key (preferencial_id_parada) references parada(id_parada);
 
 /**************************¿ARREGLAR ESTO?******************************/
-alter table  recorrido add foreign key (recorrido_paradas) references recorrido_parada(recorrido_id_recorrido);
-alter table  recorrido_parada add foreign key (parada_id_parada) references parada(id_parada);
+alter table  recorrido_paradas add foreign key (recorrido_id_recorrido) references recorrido(id_recorrido);
+alter table  recorrido_paradas add foreign key (parada_id_parada) references parada(id_parada);
 
 /*-------------------------------------DATOS------------------------------------------*/
 
@@ -262,8 +261,12 @@ insert into combustible values
 (9,'2018-07-20',999,9999,"AFJ579",2,34668513),
 (10,'2018-07-27',999,9999,"KJ579GHI",1,37498726);
 
+insert into recorrido values
+(1,"Lanús-Constitución", 10),
+(2,"Lanús-Correo Central",13),
+(3,"Lanús-Agronomía",18);
 
-insert into salida values /*tira error por que parada todavia no esta completamente creada ni en orden*/
+insert into salida values
 (1,999,'2018-06-03',6,999,"Ninguna",1,"KJ579GHI",38164236),
 (2,999,'2018-06-08',1,999,"Ninguna",3,"OP654UHG",34668513),
 (3,999,'2018-06-14',5,999,"Ninguna",2,"AFJ579",37498726),
@@ -285,7 +288,47 @@ insert into parada values
 (7,"Humberto 1ro","Carlos Calvo",7),
 (8,"Av San Martin","Condarco",9),
 (9,"Leandro N. Alem","Av Corrientes",8),
-(10,"Av Brasil","Gral Hornos",7);
-/*Seguir agregando paradas y datos*/
+(10,"Av Brasil","Gral Hornos",7),
+(11,"Av Moreno","Av Alberdi", 10),
+(12,"Av Acoyte","Av Velez",10),
+(13,"Caxaraville","Reconquista",2),
+(14,"Sitio de Montevideo","Córdoba",1),
+(15,"Maipú","Colón",5),
+(16,"Iguazú","Gral Roca",5),
+(17,"Burela","Salta",2),
+(18,"Arredondo","La Carra",2),
+(19,"San Martin","Italia",5),
+(20,"Cochabamba","Tacuarí",7),
+(21,"9 de Julio","Viamonte",8),
+(22,"Hipolito Yrigoyen","Entre Rios",5),
+(23,"Juan de Garay","Bolivar",7),
+(24,"Pringles","Damonte",1);
 
+insert into recorrido_paradas values
+(1,1),
+(1,2),
+(1,3),
+(1,4),
+(1,5),
+(1,6),
+(1,7),
+(1,10),
+(2,1),
+(2,8),
+(2,9),
+(2,11),
+(2,12),
+(2,13),
+(2,10),
+(2,21),
+(3,1),
+(3,14),
+(3,15),
+(3,16),
+(3,17),
+(3,18),
+(3,10),
+(3,21);
+
+/*Agregar recorrido_individual, tarifa_plana, y pasajero*/
 /*------------------------------------CONSULTAS-------------------------------------*/
