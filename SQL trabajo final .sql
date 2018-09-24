@@ -18,13 +18,18 @@ km_service INT not null
 create table salida (
 id_salida INT primary key not null,
 km_salida INT not null,
-fecha DATETIME not null,
+fecha DATE not null,
 pasajes_vendidos INT not null,
 km_llegada INT not null,
 novedades VARCHAR(280),
 salida_id_recorrido INT not null,
 salida_combi_patente VARCHAR (8) not null,
 salida_chofer_dni INT not null
+);
+
+create table salida_pasajeros (
+salida_id_salida INT not null,
+pasajero_dni INT not null
 );
 
 create table recorrido (
@@ -40,22 +45,28 @@ calle_Y VARCHAR(45) not null,
 parada_id_localidad INT not null
 );
 
-/*Esta parte capaz hay que arreglarla*/
+create table plan (
+id_plan INT primary key not null,
+abono_id_abono INT,
+recorrido_individual_id_recorrido_individual INT
+);
+
 create table recorrido_paradas (
+id_recorrido_paradas INT primary key not null,
 recorrido_id_recorrido INT not null,
 parada_id_parada INT not null
 );
-/*******************************************/
 
 create table recorrido_individual (
-id_recorrido_ind INT primary key,
+id_recorrido_individual INT primary key,
 monto_individual FLOAT not null,
-abordaje_id_parada INT not null
+valido BOOLEAN,
+abordaje_id_recorrido_paradas INT not null
 );
 
-create table tarifa_plana (
-id_tarifa INT primary key,
-monto_mensual FLOAT not null,
+create table abono (
+id_abono INT primary key,
+monto_total FLOAT not null,
 fecha_desde DATE not null,
 fecha_hasta DATE not null,
 preferencial_id_parada INT
@@ -100,11 +111,10 @@ gasto_inesperado FLOAT not null
 
 create table pasajero (
 dni INT primary key not null ,
-apellido VARCHAR(45),
-nombre VARCHAR(45),
-pasajero_id_tarifa INT,
-pasajero_id_recorrido_ind INT,
-pasajero_id_domicilio INT not null
+apellido VARCHAR(45) not null,
+nombre VARCHAR(45) not null,
+pasajero_id_domicilio INT not null,
+plan_activo_id_plan INT 
 );
 
 create table mantenimiento (
@@ -167,19 +177,25 @@ alter table  domicilio add foreign key (domicilio_id_localidad) references local
 
 alter table  estacion_de_servicio add foreign key (servicio_id_domicilio) references domicilio (id_domicilio);
 
-alter table  pasajero add foreign key (pasajero_id_tarifa) references tarifa_plana(id_tarifa);
-alter table  pasajero add foreign key (pasajero_id_recorrido_ind) references recorrido_individual(id_recorrido_ind);
 alter table  pasajero add foreign key (pasajero_id_domicilio) references domicilio(id_domicilio);
+alter table  pasajero add foreign key (plan_activo_id_plan) references plan(id_plan);
 
-alter table  recorrido_individual add foreign key (abordaje_id_parada) references parada(id_parada);
+alter table  plan add foreign key (abono_id_abono) references abono(id_abono);
+alter table  plan add foreign key (recorrido_individual_id_recorrido_individual) references recorrido_individual(id_recorrido_individual);
 
-alter table  tarifa_plana add foreign key (preferencial_id_parada) references parada(id_parada);
+alter table  recorrido_individual add foreign key (abordaje_id_recorrido_paradas) references recorrido_paradas(id_recorrido_paradas);
 
-/**************************¿ARREGLAR ESTO?******************************/
+alter table  abono add foreign key (preferencial_id_parada) references parada(id_parada);
+
 alter table  recorrido_paradas add foreign key (recorrido_id_recorrido) references recorrido(id_recorrido);
 alter table  recorrido_paradas add foreign key (parada_id_parada) references parada(id_parada);
 
-/*-------------------------------------DATOS------------------------------------------*/
+alter table salida_pasajeros add foreign key (salida_id_salida) references salida(id_salida);
+alter table salida_pasajeros add foreign key (pasajero_dni) references pasajero(dni);
+
+
+
+/*------------------------------------DATOS-------------------------------------*/
 
 insert into combi values 
 ("AFJ579","Kombi T2", "Volkswagen",100),
@@ -242,7 +258,7 @@ insert into mantenimiento values
 (2,'2018-06-17',"",206,3100,1,"KJ579GHI"),
 (3,'2018-06-24',"Sigue sin importar",346,3000,2,"LK467HYG"),
 (4,'2018-06-28',"No importante",216,1005,2,"KJ579GHI"),
-(5,'2018-07-02',"",3556,2100,1,"KJ579GHI"),
+(5,'2018-07-02',"",3556,2100,1,"OP654UHG"),
 (6,'2018-07-07',"",6547,4620,2,"LK467HYG"),
 (7,'2018-07-11',"",3244,1640,2,"KJ579GHI"),
 (8,'2018-07-17',"No importa",4672,1260,1,"OP654UHG"),
@@ -299,36 +315,140 @@ insert into parada values
 (18,"Arredondo","La Carra",2),
 (19,"San Martin","Italia",5),
 (20,"Cochabamba","Tacuarí",7),
-(21,"9 de Julio","Viamonte",8),
-(22,"Hipolito Yrigoyen","Entre Rios",5),
+(21,"9 de Julio","Viamonte",8);
+/*(22,"Hipolito Yrigoyen","Entre Rios",5),
 (23,"Juan de Garay","Bolivar",7),
-(24,"Pringles","Damonte",1);
+(24,"Pringles","Damonte",1);*/
 
 insert into recorrido_paradas values
-(1,1),
-(1,2),
-(1,3),
-(1,4),
-(1,5),
-(1,6),
-(1,7),
-(1,10),
-(2,1),
-(2,8),
-(2,9),
-(2,11),
-(2,12),
-(2,13),
-(2,10),
-(2,21),
-(3,1),
-(3,14),
-(3,15),
-(3,16),
-(3,17),
-(3,18),
-(3,10),
-(3,21);
+(1,1,1),
+(2,1,2),
+(3,1,3),
+(4,1,4),
+(5,1,5),
+(6,1,6),
+(7,1,7),
+(8,1,10),
+(9,2,1),
+(10,2,8),
+(11,2,9),
+(12,2,11),
+(13,2,12),
+(14,2,13),
+(15,2,10),
+(16,2,21),
+(17,3,1),
+(18,3,14),
+(19,3,15),
+(20,3,16),
+(21,3,17),
+(22,3,18),
+(23,3,10),
+(24,3,21);
 
-/*Agregar recorrido_individual, tarifa_plana, y pasajero*/
+insert into abono values
+(1,200,'2018-05-21','2018-06-20',1),
+(2,300,'2018-06-21','2018-07-20',13);
+
+insert into recorrido_individual values
+(1,15,false,1),
+(2,15,false,1),
+(3,15,false,10),
+(4,16,false,14),
+(5,16,true,12),
+(6,16,true,11),
+(7,16,true,5);
+
+insert into plan values
+(1, 1, null), -- ID plan, abono, viaje individual.
+(2, 2, null),
+(3, null, 1),
+(4, null, 2),
+(5, null, 3),
+(6, null, 4),
+(7, null, 5),
+(8, null, 6),
+(9, null, 7);
+
+insert into pasajero values
+(25456825,"Rodriguez","Pablo",3,1),
+(34567882,"Barroso","Daniel",4,2),
+(23417982,"Vila","Maria",7,3),
+(35762199,"Rio","Carmen",8,4),
+(40241967,"Duran","Luis",10,5),
+(41216748,"Cortes","Ignacio",12,6),
+(39413579,"Sánchez","Pilar",15,7),
+(38541967,"Daniel","Martin",16,8),
+(25216796,"Rubio","María",17,9),
+(36449792,"Roncero","Alejandra",18,null);
+
+insert into salida_pasajeros values
+(1,23417982),
+(1,35762199),
+(1,40241967),
+(2,41216748),
+(3,39413579),
+(3,38541967),
+(4,25216796),
+(4,36449792),
+(5,34567882),
+(6,25456825),
+(6,39413579),
+(6,25216796),
+(7,35762199),
+(7,38541967),
+(8,39413579),
+(8,36449792),
+(9,41216748),
+(9,23417982),
+(9,38541967),
+(10,36449792);
+
+
 /*------------------------------------CONSULTAS-------------------------------------*/
+select* from pasajero;
+-- 2) Emitir listado de recorridos, con sus paradas.
+select nombre_recorrido, calle_x, calle_y
+from recorrido
+inner join recorrido_paradas
+on recorrido.id_recorrido=recorrido_paradas.recorrido_id_recorrido
+inner join parada
+on recorrido_paradas.parada_id_parada=parada.id_parada;
+
+-- 3) Emitir listados de historial de mantenimiento entre fechas, por móvil o taller.
+
+select fecha_mantenimiento, patente
+from combi
+inner join mantenimiento
+on combi.patente=mantenimiento.mantenimiento_combi_patente;
+
+-- 4) Confeccionar las planillas de salida, con las paradas en las que deba detenerse el móvil, y los pasajeros a recoger en cada una de ellas.
+
+-- 5) Consultar la recaudación bruta ya sea por recorrido o por destino (provincia de Buenos Aires o CABA)  
+-- 6) Consultar los gastos por recorrido, por chofer o por chofer y entre fechas.
+
+
+
+-- 7) Emitir un listado mensual de los gastos realizados por todos los choferes. 
+-- 8) Emitir listados de consumo medio de combustible por km entre fechas (por recorrido, por móvil o por chofer), ordenado de mayor a menor. 
+-- 9) Emitir listados de ganancia bruta por km, por recorrido 
+-- 10) Emitir listado de cantidad de pasajeros transportados entre fechas por recorrido. 
+-- 11)Emitir listado mensual de recaudación por recorrido o parada final. 
+-- 12)Emitir listado de km recorridos entre fecha, para móvil o chofer.
+
+select patente, (km_llegada-km_salida) as km_recorrido , fecha
+from combi
+inner join salida
+on combi.patente=salida.salida_combi_patente;
+
+ select*from recorrido_individual;
+-- 13)Emitir listado de gastos de mantenimiento, por móvil.
+
+select patente, sum(monto_service) as total_gasto_por_movil
+from combi
+inner join mantenimiento
+on combi.patente=mantenimiento.mantenimiento_combi_patente
+group by patente;
+
+-- 14)Emitir listado de ganancia bruta por recorrido, calculada como el total de pasajes vendidos menos los gastos entre fechas. 
+-- 15)Consultar la ganancia bruta de la empresa, calculada como el total de pasajes vendidos, más los abonos, menos el combustible y menos los gastos de mantenimiento. 
