@@ -24,7 +24,8 @@ km_llegada INT not null,
 novedades VARCHAR(280),
 salida_id_recorrido INT not null,
 salida_combi_patente VARCHAR (8) not null,
-salida_chofer_dni INT not null
+salida_chofer_dni INT not null,
+salida_id_planilla INT not null
 );
 
 create table salida_pasajeros (
@@ -109,6 +110,7 @@ caja_final FLOAT not null,
 gasto_inesperado FLOAT not null 
 );
 
+
 create table pasajero (
 dni INT primary key not null ,
 apellido VARCHAR(45) not null,
@@ -159,6 +161,7 @@ servicio_id_domicilio INT not null
 alter table salida add foreign key (salida_combi_patente) references combi(patente);
 alter table salida add foreign key (salida_chofer_dni) references chofer(dni);
 alter table salida add foreign key (salida_id_recorrido) references recorrido(id_recorrido);
+alter table salida add foreign key (salida_id_planilla) references planilla_chofer(pchofer_id_salida);
 
 alter table chofer add foreign key (chofer_id_domicilio) references domicilio(id_domicilio);
 
@@ -283,16 +286,17 @@ insert into recorrido values
 (3,"Lanús-Agronomía",18);
 
 insert into salida values
-(1,999,'2018-06-03',6,999,"Ninguna",1,"KJ579GHI",38164236),
-(2,999,'2018-06-08',1,999,"Ninguna",3,"OP654UHG",34668513),
-(3,999,'2018-06-14',5,999,"Ninguna",2,"AFJ579",37498726),
-(4,999,'2018-06-25',4,999,"Ninguna",1,"LK467HYG",34668513),
-(5,999,'2018-06-30',6,999,"Ninguna",1,"OP654UHG",38164236),
-(6,999,'2018-07-02',7,999,"Ninguna",2,"KJ579GHI",37498726),
-(7,999,'2018-07-12',8,999,"Ninguna",2,"LK467HYG",36264876),
-(8,999,'2018-07-15',4,999,"Ninguna",3,"AFJ579",34668513),
-(9,999,'2018-07-20',5,999,"Ninguna",3,"KJ579GHI",38164236),
-(10,999,'2018-07-24',2,999,"Ninguna",2,"OP654UHG",36264876);
+(1,999,'2018-06-03',6,999,"Ninguna",1,"KJ579GHI",38164236,1),
+(2,999,'2018-06-08',1,999,"Ninguna",3,"OP654UHG",34668513,5),
+(3,999,'2018-06-14',5,999,"Ninguna",2,"AFJ579",37498726,6),
+(4,999,'2018-06-25',4,999,"Ninguna",1,"LK467HYG",34668513,7),
+(5,999,'2018-06-30',6,999,"Ninguna",1,"OP654UHG",38164236,10),
+(6,999,'2018-07-02',7,999,"Ninguna",2,"KJ579GHI",37498726,9),
+(7,999,'2018-07-12',8,999,"Ninguna",2,"LK467HYG",36264876,8),
+(8,999,'2018-07-15',4,999,"Ninguna",3,"AFJ579",34668513,4),
+(9,999,'2018-07-20',5,999,"Ninguna",3,"KJ579GHI",38164236,2),
+(10,999,'2018-07-24',2,999,"Ninguna",2,"OP654UHG",36264876,3);
+
 
 insert into parada values
 (1,"Av Yrigoyen","Quintana",1),
@@ -404,6 +408,19 @@ insert into salida_pasajeros values
 (9,38541967),
 (10,36449792);
 
+insert into planilla_chofer values
+(1,300,20,3000,2500,500),
+(2,300,25,3250,3100,150),
+(3,300,27,3400,2900,500),
+(4,300,17,2800,2700,100),
+(5,300,22,3080,3080,0),
+(6,300,30,3600,3400,200),
+(7,300,19,2920,2700,220),
+(8,300,20,3000,2900,100),
+(9,300,22,3080,2900,180),
+(10,300,25,3250,3000,250);
+
+
 
 /*------------------------------------CONSULTAS-------------------------------------*/
 select* from pasajero;
@@ -426,13 +443,29 @@ on combi.patente=mantenimiento.mantenimiento_combi_patente;
 
 -- 5) Consultar la recaudación bruta ya sea por recorrido o por destino (provincia de Buenos Aires o CABA)  
 -- 6) Consultar los gastos por recorrido, por chofer o por chofer y entre fechas.
-
-
+select s.fecha as fecha,sum(pc.gasto_inesperado) as monto, c.nombre as chofer, r.nombre_recorrido as recorrido
+from salida s
+inner join planilla_chofer pc on pc.pchofer_id_salida=s.salida_id_planilla
+inner join chofer c on c.dni=s.salida_chofer_dni
+inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+group by chofer,recorrido;
 
 -- 7) Emitir un listado mensual de los gastos realizados por todos los choferes. 
+select c.nombre as chofer, sum(pc.gasto_inesperado) as total_gastado
+from salida s
+inner join chofer c on c.dni=s.salida_chofer_dni
+inner join planilla_chofer pc on pc.pchofer_id_salida=s.salida_id_planilla
+where fecha between '20180601' AND '20180731'
+group by chofer;
 -- 8) Emitir listados de consumo medio de combustible por km entre fechas (por recorrido, por móvil o por chofer), ordenado de mayor a menor. 
 -- 9) Emitir listados de ganancia bruta por km, por recorrido 
--- 10) Emitir listado de cantidad de pasajeros transportados entre fechas por recorrido. 
+-- 10) Emitir listado de cantidad de pasajeros transportados entre fechas por recorrido.
+select r.nombre_recorrido as recorrido, sum(s.pasajes_vendidos) as totalxrecorrido
+from salida s
+inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+where fecha between '20180601' AND '20180731'
+group by recorrido;
+
 -- 11)Emitir listado mensual de recaudación por recorrido o parada final. 
 -- 12)Emitir listado de km recorridos entre fecha, para móvil o chofer.
 
