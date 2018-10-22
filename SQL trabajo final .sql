@@ -205,10 +205,10 @@ alter table planilla_chofer add foreign key (pchofer_id_salida) references salid
 /*------------------------------------DATOS-------------------------------------*/
 insert into combi values 
 -- Patente, modelo, marca, km_service
-("AFJ579","Kombi T2", "Volkswagen",100),
-("OP654UHG","Expert Tepee","Peugeot", 300),
-("KJ579GHI","Trafic","Peugeot", 200),
-("LK467HYG","Trafic","Peugeot", 200);
+("AFJ579","Kombi T2", "Volkswagen",380),
+("OP654UHG","Expert Tepee","Peugeot", 170),
+("KJ579GHI","Trafic","Peugeot", 420),
+("LK467HYG","Trafic","Peugeot", 40);
 
 insert into provincia values
 -- id_provincia, nombre_provincia
@@ -268,29 +268,29 @@ insert into estacion_de_servicio values
 
 insert into mantenimiento values
 -- id_mantenimiento, fecha_mantenimiento, descripcion, odometro, monto_service, id_taller, patente
-(1,'2018-06-13',"No importante",133,2000,1,"AFJ579"),
-(2,'2018-06-17',"",206,3100,1,"KJ579GHI"),
-(3,'2018-06-24',"Sigue sin importar",346,3000,2,"LK467HYG"),
-(4,'2018-06-28',"No importante",216,1005,2,"KJ579GHI"),
-(5,'2018-07-02',"",3556,2100,1,"OP654UHG"),
-(6,'2018-07-07',"",6547,4620,2,"LK467HYG"),
-(7,'2018-07-11',"",3244,1640,2,"KJ579GHI"),
-(8,'2018-07-17',"No importa",4672,1260,1,"OP654UHG"),
-(9,'2018-07-24',"",4675,1260,1,"AFJ579"),
-(10,'2018-07-30',"No va a importar nunca",1235,3210,1,"KJ579GHI");
+(1,'2018-06-13',"No importante",270,2000,1,"AFJ579"),
+(2,'2018-06-17',"",353,3100,1,"KJ579GHI"),
+(3,'2018-06-24',"Sigue sin importar",4,3000,2,"LK467HYG"),
+(4,'2018-06-28',"No importante",421,1005,2,"KJ579GHI"),
+(5,'2018-07-02',"",46,2100,1,"OP654UHG"),
+(6,'2018-07-07',"",43,4620,2,"LK467HYG"),
+(7,'2018-07-11',"",417,1640,2,"KJ579GHI"),
+(8,'2018-07-17',"No importa",58,1260,1,"OP654UHG"),
+(9,'2018-07-24',"",392,1260,1,"AFJ579"),
+(10,'2018-07-30',"No va a importar nunca",419,3210,1,"KJ579GHI");
 
 insert into combustible values
--- id_carga, fecha_carga, litros_cargados, montos_cargados, monto_carga, patente, id_estacion, chofer_dni
-(1,'2018-06-02',999,9999,"OP654UHG",1,34668513),
-(2,'2018-06-05',999,9999,"AFJ579",2,38164236),
-(3,'2018-06-11',999,9999,"LK467HYG",1,37498726),
-(4,'2018-06-17',999,9999,"KJ579GHI",2,36264876),
-(5,'2018-06-30',999,9999,"AFJ579",2,38164236),
-(6,'2018-07-01',999,9999,"LK467HYG",1,37498726),
-(7,'2018-07-09',999,9999,"OP654UHG",1,36264876),
-(8,'2018-07-14',999,9999,"KJ579GHI",2,38164236),
-(9,'2018-07-20',999,9999,"AFJ579",2,34668513),
-(10,'2018-07-27',999,9999,"KJ579GHI",1,37498726);
+-- id_carga, fecha_carga, litros_cargados, monto_carga, patente, id_estacion, chofer_dni
+(1,'2018-06-02',32,1280,"OP654UHG",1,34668513),
+(2,'2018-06-05',26,1040,"AFJ579",2,38164236),
+(3,'2018-06-11',41,1640,"LK467HYG",1,37498726),
+(4,'2018-06-17',42,1680,"KJ579GHI",2,36264876),
+(5,'2018-06-30',20,820,"AFJ579",2,38164236),
+(6,'2018-07-01',30,1230,"LK467HYG",1,37498726),
+(7,'2018-07-09',45,1845,"OP654UHG",1,36264876),
+(8,'2018-07-14',35,1435,"KJ579GHI",2,38164236),
+(9,'2018-07-20',37,1517,"AFJ579",2,34668513),
+(10,'2018-07-27',28,1148,"KJ579GHI",1,37498726);
 
 insert into recorrido values
 -- id_recorrido, nombre_recorrido, distancia_recorrer
@@ -300,16 +300,16 @@ insert into recorrido values
 
 insert into salida values
 -- id_salida, km_salida, fecha, pasajes_vendidos, km_llegada, novedades, id_recorrido, patente, chofer_dni
-(1,999,'2018-06-03',6,999,"Ninguna",1,"KJ579GHI",38164236),
-(2,999,'2018-06-08',1,999,"Ninguna",3,"OP654UHG",34668513),
-(3,999,'2018-06-14',5,999,"Ninguna",2,"AFJ579",37498726),
-(4,999,'2018-06-25',4,999,"Ninguna",1,"LK467HYG",34668513),
-(5,999,'2018-06-30',6,999,"Ninguna",1,"OP654UHG",38164236),
-(6,999,'2018-07-02',7,999,"Ninguna",2,"KJ579GHI",37498726),
-(7,999,'2018-07-12',8,999,"Ninguna",2,"LK467HYG",36264876),
-(8,999,'2018-07-15',4,999,"Ninguna",3,"AFJ579",34668513),
-(9,999,'2018-07-20',5,999,"Ninguna",3,"KJ579GHI",38164236),
-(10,999,'2018-07-24',2,999,"Ninguna",2,"OP654UHG",36264876);
+(1,999,'2018-06-03',6,472,"Ninguna",1,"KJ579GHI",38164236),
+(2,999,'2018-06-08',1,152,"Ninguna",3,"OP654UHG",34668513),
+(3,999,'2018-06-14',5,397,"Ninguna",2,"AFJ579",37498726),
+(4,999,'2018-06-25',4,53,"Ninguna",1,"LK467HYG",34668513),
+(5,999,'2018-06-30',6,170,"Ninguna",1,"OP654UHG",38164236),
+(6,999,'2018-07-02',7,482,"Ninguna",2,"KJ579GHI",37498726),
+(7,999,'2018-07-12',8,66,"Ninguna",2,"LK467HYG",36264876),
+(8,999,'2018-07-15',4,407,"Ninguna",3,"AFJ579",34668513),
+(9,999,'2018-07-20',5,500,"Ninguna",3,"KJ579GHI",38164236),
+(10,999,'2018-07-24',2,183,"Ninguna",2,"OP654UHG",36264876);
 
 insert into parada values
 -- id_parada, calle_x, calle_y, id_localidad
@@ -380,7 +380,7 @@ insert into pasajero values
 
 insert into tarifa_plana values
 -- id_tarifa_plana, monto, fecha_desde, fecha_hasta, pasajero_dni
-(1,200,'2018-05-21','2018-06-20',38541967),
+(1,300,'2018-05-21','2018-06-20',38541967),
 (2,300,'2018-06-21','2018-07-20',25216796);
 
 insert into recorrido_individual values
@@ -395,16 +395,16 @@ insert into recorrido_individual values
 
 insert into planilla_chofer values
 -- id_salida, caja_inicial, cantidad_boletos, monto_total, caja_final, gasto_inesperado
-(1,3000,6,9999,9999,0),
-(2,3000,1,9999,9999,0),
-(3,3000,5,9999,9999,0),
-(4,3000,4,9999,9999,0),
-(5,3000,5,9999,9999,0),
-(6,3000,5,9999,9999,0),
-(7,3000,7,9999,9999,0),
-(8,3000,4,9999,9999,0),
-(9,3000,5,9999,9999,0),
-(10,3000,2,9999,9999,0);
+(1,2871,6,4071,4071,0),
+(2,2774,1,3074,3074,0),
+(3,2905,5,3905,3705,200),
+(4,2837,4,3737,3737,0),
+(5,3257,5,4257,4257,0),
+(6,2713,5,3713,3613,100),
+(7,2819,7,4219,3719,500),
+(8,3461,4,4261,4261,0),
+(9,3013,5,4013,4013,0),
+(10,3367,2,3767,3687,80);
 
 insert into tarifa_plana_recorridos_paradas values
 -- id_tarifa_plana, recorrido_preferencial, parada_preferencial
@@ -442,11 +442,13 @@ insert into tarifa_plana_recorridos_paradas values
 
 /*------------------------------------CONSULTAS-------------------------------------*/
 -- 1) Emitir listados de clientes, con su correspondiente abono si lo tiene.
-/*
-select apellido, nombre, abono_id_abono 
+
+select apellido, nombre, id_recorrido_individual, id_tarifa_plana
 from pasajero
-inner join plan
-on plan_activo_id_plan=id_plan;
+left join recorrido_individual
+on pasajero.dni=recorrido_individual.pasajero_dni
+left join tarifa_plana
+on pasajero.dni=tarifa_plana.pasajero_dni;
 
 -- 2) Emitir listado de recorridos, con sus paradas.
 select nombre_recorrido, calle_x, calle_y
@@ -477,6 +479,9 @@ inner join recorrido_individual
 on plan.recorrido_individual_id_recorrido_individual=recorrido_individual.id_recorrido_individual;
 
 -- 5) Consultar la recaudación bruta ya sea por recorrido o por destino (provincia de Buenos Aires o CABA)  
+
+
+
 -- 6) Consultar los gastos por recorrido, por chofer o por chofer y entre fechas.
 
 -- 7) Emitir un listado mensual de los gastos realizados por todos los choferes. 
@@ -491,7 +496,6 @@ from combi
 inner join salida
 on combi.patente=salida.salida_combi_patente;
 
- select*from recorrido_individual;
 -- 13)Emitir listado de gastos de mantenimiento, por móvil.
 
 select patente, sum(monto_service) as total_gasto_por_movil
@@ -502,13 +506,4 @@ group by patente;
 
 -- 14)Emitir listado de ganancia bruta por recorrido, calculada como el total de pasajes vendidos menos los gastos entre fechas. 
 -- 15)Consultar la ganancia bruta de la empresa, calculada como el total de pasajes vendidos, más los abonos, menos el combustible y menos los gastos de mantenimiento. 
-
-select * from pasajero pa
-inner join plan pl
-on pa.plan_activo_id_plan=pl.id_plan
-inner join recorrido_individual ri
-on pl.recorrido_individual_id_recorrido_individual=ri.id_recorrido_individual
-inner join abono a
-on pl.abono_id_abono=a.id_abono
-order by apellido DESC;
 
