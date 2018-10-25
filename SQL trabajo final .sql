@@ -1,5 +1,5 @@
 /*-----------------------------ELIMINA ESQUEMA----------------------------*/
-drop schema Transportes;
+drop schema if exists Transportes;
 
 /*-------------------------------CREA ESQUEMA-----------------------------*/
 create schema if not exists Transportes;
@@ -20,6 +20,7 @@ id_salida INT primary key not null,
 km_salida INT not null,
 fecha DATE not null,
 pasajes_vendidos INT not null,
+valor_pasaje FLOAT not null,
 km_llegada INT not null,
 novedades VARCHAR(280),
 salida_id_recorrido INT not null,
@@ -110,7 +111,6 @@ pchofer_id_salida INT primary key not null,
 caja_inicial FLOAT not null,
 cantidad_boletos INT not null,
 monto_total FLOAT,
-caja_final FLOAT,
 gasto_inesperado FLOAT 
 );
 
@@ -299,17 +299,17 @@ insert into recorrido values
 (3,"Lanús-Agronomía",18);
 
 insert into salida values
--- id_salida, km_salida, fecha, pasajes_vendidos, km_llegada, novedades, id_recorrido, patente, chofer_dni
-(1,999,'2018-06-03',6,472,"Ninguna",1,"KJ579GHI",38164236),
-(2,999,'2018-06-08',1,152,"Ninguna",3,"OP654UHG",34668513),
-(3,999,'2018-06-14',5,397,"Ninguna",2,"AFJ579",37498726),
-(4,999,'2018-06-25',4,53,"Ninguna",1,"LK467HYG",34668513),
-(5,999,'2018-06-30',6,170,"Ninguna",1,"OP654UHG",38164236),
-(6,999,'2018-07-02',7,482,"Ninguna",2,"KJ579GHI",37498726),
-(7,999,'2018-07-12',8,66,"Ninguna",2,"LK467HYG",36264876),
-(8,999,'2018-07-15',4,407,"Ninguna",3,"AFJ579",34668513),
-(9,999,'2018-07-20',5,500,"Ninguna",3,"KJ579GHI",38164236),
-(10,999,'2018-07-24',2,183,"Ninguna",2,"OP654UHG",36264876);
+-- id_salida, km_salida, fecha, pasajes_vendidos,valor pasaje, km_llegada, novedades, id_recorrido, patente, chofer_dni
+(1,463,'2018-06-03',6,45,472,"Ninguna",1,"KJ579GHI",38164236),
+(2,134,'2018-06-08',1,45,152,"Ninguna",3,"OP654UHG",34668513),
+(3,383,'2018-06-14',5,45,397,"Ninguna",2,"AFJ579",37498726),
+(4,43,'2018-06-25',4,45,53,"Ninguna",1,"LK467HYG",34668513),
+(5,161,'2018-06-30',6,45,170,"Ninguna",1,"OP654UHG",38164236),
+(6,479,'2018-07-02',7,45,482,"Ninguna",2,"KJ579GHI",37498726),
+(7,53,'2018-07-12',8,45,66,"Ninguna",2,"LK467HYG",36264876),
+(8,389,'2018-07-15',4,45,407,"Ninguna",3,"AFJ579",34668513),
+(9,482,'2018-07-20',5,45,500,"Ninguna",3,"KJ579GHI",38164236),
+(10,170,'2018-07-24',2,45,183,"Ninguna",2,"OP654UHG",36264876);
 
 insert into parada values
 -- id_parada, calle_x, calle_y, id_localidad
@@ -394,17 +394,17 @@ insert into recorrido_individual values
 (7,200,'2018-05-1','2018-06-1',39413579,1,3);
 
 insert into planilla_chofer values
--- id_salida, caja_inicial, cantidad_boletos, monto_total, caja_final, gasto_inesperado
-(1,2871,6,4071,4071,0),
-(2,2774,1,3074,3074,0),
-(3,2905,5,3905,3705,200),
-(4,2837,4,3737,3737,0),
-(5,3257,5,4257,4257,0),
-(6,2713,5,3713,3613,100),
-(7,2819,7,4219,3719,500),
-(8,3461,4,4261,4261,0),
-(9,3013,5,4013,4013,0),
-(10,3367,2,3767,3687,80);
+-- id_salida, caja_inicial, cantidad_boletos, monto_total, gasto_inesperado
+(1,2871,6,4071,0),
+(2,2774,1,3074,0),
+(3,2905,5,3905,200),
+(4,2837,4,3737,0),
+(5,3257,5,4257,0),
+(6,2713,5,3713,100),
+(7,2819,7,4219,500),
+(8,3461,4,4261,0),
+(9,3013,5,4013,0),
+(10,3367,2,3767,80);
 
 insert into tarifa_plana_recorridos_paradas values
 -- id_tarifa_plana, recorrido_preferencial, parada_preferencial
@@ -467,24 +467,32 @@ on combi.patente=mantenimiento.mantenimiento_combi_patente;
 
 -- 4) Confeccionar las planillas de salida, con las paradas en las que deba detenerse el móvil, y los pasajeros a recoger en cada una de ellas.
 
-select fecha, dni, abordaje_id_recorrido_paradas
-from salida
-inner join salida_pasajeros
-on salida.id_salida=salida_pasajeros.salida_id_salida
-inner join pasajero
-on salida_pasajeros.pasajero_dni=pasajero.dni
-inner join plan
-on pasajero.plan_activo_id_plan=plan.id_plan
-inner join recorrido_individual
-on plan.recorrido_individual_id_recorrido_individual=recorrido_individual.id_recorrido_individual;
 
 -- 5) Consultar la recaudación bruta ya sea por recorrido o por destino (provincia de Buenos Aires o CABA)  
-
-
+select	 month(s.fecha) mes, sum(pc.gasto_inesperado) from planilla_chofer pc
+	inner join salida s on s.id_salida=pc.pchofer_id_salida
+    group by mes;
 
 -- 6) Consultar los gastos por recorrido, por chofer o por chofer y entre fechas.
-
--- 7) Emitir un listado mensual de los gastos realizados por todos los choferes. 
+select (pc.gasto_inesperado+sum(co.monto_carga)) as gasto_total, r.nombre_recorrido as recorrido
+	from  salida s
+    inner join combustible co on co.combustible_combi_patente=s.salida_combi_patente
+    inner join planilla_chofer pc on pc.pchofer_id_salida=s.id_salida
+    inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+    inner join chofer c on c.dni=s.salida_chofer_dni
+    group by recorrido;
+    
+-- 7) Emitir un listado mensual de los gastos realizados por todos los choferes.
+ 
+select month(co.fecha_carga)  mes, sum(co.monto_carga) gasto_mensual
+	from  salida s
+    inner join combustible co on co.combustible_combi_patente=s.salida_combi_patente
+    inner join planilla_chofer pc on pc.pchofer_id_salida=s.id_salida
+    inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+    inner join chofer c on c.dni=s.salida_chofer_dni
+    where month(co.fecha_carga)=month(s.fecha)
+	group by mes;
+    
 -- 8) Emitir listados de consumo medio de combustible por km entre fechas (por recorrido, por móvil o por chofer), ordenado de mayor a menor. 
 -- 9) Emitir listados de ganancia bruta por km, por recorrido 
 -- 10) Emitir listado de cantidad de pasajeros transportados entre fechas por recorrido. 
@@ -492,9 +500,9 @@ on plan.recorrido_individual_id_recorrido_individual=recorrido_individual.id_rec
 -- 12)Emitir listado de km recorridos entre fecha, para móvil o chofer.
 
 select patente, (km_llegada-km_salida) as km_recorrido , fecha
-from combi
-inner join salida
-on combi.patente=salida.salida_combi_patente;
+from salida s
+inner join combi c
+on c.patente=s.salida_combi_patente;
 
 -- 13)Emitir listado de gastos de mantenimiento, por móvil.
 
