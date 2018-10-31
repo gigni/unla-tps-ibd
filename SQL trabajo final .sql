@@ -494,9 +494,28 @@ select month(co.fecha_carga)  mes, sum(co.monto_carga) gasto_mensual
 	group by mes;
     
 -- 8) Emitir listados de consumo medio de combustible por km entre fechas (por recorrido, por móvil o por chofer), ordenado de mayor a menor. 
+select s.fecha,c.dni,c.nombre,c.apellido, avg(co.litros_cargados) as consumoMedio from combustible co
+	inner join chofer c on c.dni=co.combustible_chofer_dni
+    inner join salida s on s.salida_chofer_dni=co.combustible_chfer_dni
+	where
+     s.fecha between 20180601 and 20180731
+    group by c.nombre
+    order by consumoMedio desc;
 -- 9) Emitir listados de ganancia bruta por km, por recorrido 
+
 -- 10) Emitir listado de cantidad de pasajeros transportados entre fechas por recorrido. 
+select r.nombre_recorrido as recorrido , count(p.dni) pasajeros from salida s
+	inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+    inner join recorrido_paradas rp on rp.recorrido_id_recorrido=r.id_recorrido
+    inner join recorrido_individual ri on ri.recorrido_abordaje=rp.recorrido_id_recorrido
+    inner join pasajero p on p.dni=ri.pasajero_dni
+    where
+    s.fecha between 20180601 and 20180731
+    group by recorrido;
+    
+    
 -- 11)Emitir listado mensual de recaudación por recorrido o parada final. 
+
 -- 12)Emitir listado de km recorridos entre fecha, para móvil o chofer.
 
 select patente, (km_llegada-km_salida) as km_recorrido , fecha
@@ -512,6 +531,13 @@ inner join mantenimiento
 on combi.patente=mantenimiento.mantenimiento_combi_patente
 group by patente;
 
--- 14)Emitir listado de ganancia bruta por recorrido, calculada como el total de pasajes vendidos menos los gastos entre fechas. 
+
+-- 14)Emitir listado de ganancia bruta por recorrido, calculada como el total de pasajes vendidos menos los gastos entre fechas.
+select r.nombre_recorrido as recorrido, s.pasajes_vendidos,((s.pasajes_vendidos*s.valor_pasaje)+(count(tp.id_tarifa_plana)*monto)+(count(ri.id_recorrido_individual)*monto))-pc.gasto_inesperado-co.monto_carga) as ganancia
+from salida s
+inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+inner join recorrido_paradas rp on rp.recorrido_id_recorrido= r.id_recorrido
+inner join tarifa_plana_recorrido_paradas z on z.
+
 -- 15)Consultar la ganancia bruta de la empresa, calculada como el total de pasajes vendidos, más los abonos, menos el combustible y menos los gastos de mantenimiento. 
 
