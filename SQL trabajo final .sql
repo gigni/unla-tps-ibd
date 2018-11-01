@@ -467,6 +467,20 @@ on combi.patente=mantenimiento.mantenimiento_combi_patente;
 
 -- 4) Confeccionar las planillas de salida, con las paradas en las que deba detenerse el móvil, y los pasajeros a recoger en cada una de ellas.
 
+select salida.id_salida, parada.calle_x, parada.calle_y, pasajero.nombre
+from salida 
+inner join recorrido
+on salida.salida_id_recorrido = recorrido.id_recorrido
+inner join recorrido_paradas
+on recorrido.id_recorrido=recorrido_paradas.recorrido_id_recorrido
+inner join recorrido_individual
+on recorrido_paradas.recorrido_id_recorrido=recorrido_individual.recorrido_abordaje
+inner join pasajero
+on recorrido_individual.pasajero_dni=pasajero.dni
+inner join parada 
+on recorrido_paradas.parada_id_parada=parada.id_parada;
+
+
 
 -- 5) Consultar la recaudación bruta ya sea por recorrido o por destino (provincia de Buenos Aires o CABA)  
 select	 month(s.fecha) mes, sum(pc.gasto_inesperado) from planilla_chofer pc
@@ -496,7 +510,7 @@ select month(co.fecha_carga)  mes, sum(co.monto_carga) gasto_mensual
 -- 8) Emitir listados de consumo medio de combustible por km entre fechas (por recorrido, por móvil o por chofer), ordenado de mayor a menor. 
 select s.fecha,c.dni,c.nombre,c.apellido, avg(co.litros_cargados) as consumoMedio from combustible co
 	inner join chofer c on c.dni=co.combustible_chofer_dni
-    inner join salida s on s.salida_chofer_dni=co.combustible_chfer_dni
+    inner join salida s on s.salida_chofer_dni=co.combustible_chofer_dni
 	where
      s.fecha between 20180601 and 20180731
     group by c.nombre
@@ -533,11 +547,10 @@ group by patente;
 
 
 -- 14)Emitir listado de ganancia bruta por recorrido, calculada como el total de pasajes vendidos menos los gastos entre fechas.
-select r.nombre_recorrido as recorrido, s.pasajes_vendidos,((s.pasajes_vendidos*s.valor_pasaje)+(count(tp.id_tarifa_plana)*monto)+(count(ri.id_recorrido_individual)*monto))-pc.gasto_inesperado-co.monto_carga) as ganancia
+select r.nombre_recorrido as recorrido, s.pasajes_vendidos,((s.pasajes_vendidos*s.valor_pasaje)+(count(tp.id_tarifa_plana)*monto)+(count(ri.id_recorrido_individual)*monto))-(pc.gasto_inesperado-co.monto_carga) as ganancia
 from salida s
 inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
 inner join recorrido_paradas rp on rp.recorrido_id_recorrido= r.id_recorrido
-inner join tarifa_plana_recorrido_paradas z on z.
+inner join tarifa_plana_recorrido_paradas z on z;
 
 -- 15)Consultar la ganancia bruta de la empresa, calculada como el total de pasajes vendidos, más los abonos, menos el combustible y menos los gastos de mantenimiento. 
-
