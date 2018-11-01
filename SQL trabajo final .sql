@@ -478,7 +478,8 @@ on recorrido_paradas.recorrido_id_recorrido=recorrido_individual.recorrido_abord
 inner join pasajero
 on recorrido_individual.pasajero_dni=pasajero.dni
 inner join parada 
-on recorrido_paradas.parada_id_parada=parada.id_parada;
+on recorrido_paradas.parada_id_parada=parada.id_parada
+order by salida.id_salida;
 
 
 
@@ -486,6 +487,7 @@ on recorrido_paradas.parada_id_parada=parada.id_parada;
 select	 month(s.fecha) mes, sum(pc.gasto_inesperado) from planilla_chofer pc
 	inner join salida s on s.id_salida=pc.pchofer_id_salida
     group by mes;
+    
 
 -- 6) Consultar los gastos por recorrido, por chofer o por chofer y entre fechas.
 select (pc.gasto_inesperado+sum(co.monto_carga)) as gasto_total, r.nombre_recorrido as recorrido
@@ -517,6 +519,8 @@ select s.fecha,c.dni,c.nombre,c.apellido, avg(co.litros_cargados) as consumoMedi
     order by consumoMedio desc;
 -- 9) Emitir listados de ganancia bruta por km, por recorrido 
 
+
+
 -- 10) Emitir listado de cantidad de pasajeros transportados entre fechas por recorrido. 
 select r.nombre_recorrido as recorrido , count(p.dni) pasajeros from salida s
 	inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
@@ -529,6 +533,12 @@ select r.nombre_recorrido as recorrido , count(p.dni) pasajeros from salida s
     
     
 -- 11)Emitir listado mensual de recaudación por recorrido o parada final. 
+
+select s.fecha as mes, SUM(ri.monto)as recaudacion
+	from salida s
+	inner join recorrido r on r.id_recorrido=s.salida_id_recorrido
+    inner join recorrido_paradas rp on rp.recorrido_id_recorrido=r.id_recorrido
+    inner join recorrido_individual ri on ri.recorrido_abordaje=rp.recorrido_id_recorrido;
 
 -- 12)Emitir listado de km recorridos entre fecha, para móvil o chofer.
 
